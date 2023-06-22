@@ -1,0 +1,295 @@
+; Program Disease Diagnostic
+; Nama: Agustinus Angelo Christian Fernando
+; NIM: 21/473804/TK/52235
+
+; Untuk mengambil inputan user
+(defrule input 
+    (declare (salience 100))
+    => 
+    (printout t crlf "===========================================") 
+    (printout t crlf "Selamat Datang di Program Diagnosa Penyakit") 
+    (printout t crlf "===========================================") 
+    (printout t crlf "Apakah suhu Anda di atas 37.5 derajat Celcius? (y/n) ") 
+    (assert (suhu = (read))) 
+    (printout t crlf "Apakah Anda sedang pilek? (y/n) ") 
+    (assert (pilek = (read))) 
+    (printout t crlf "Apakah Anda sedang batuk? (y/n) ")
+    (assert (batuk = (read)))
+    (printout t crlf "Apakah Anda sedang pusing? (y/n) ")
+    (assert (pusing = (read)))
+    (printout t crlf "Apakah Anda merasa sakit perut? (y/n) ")
+    (assert (perut = (read)))
+    (printout t crlf "Apakah Anda muntah? (y/n) ")
+    (assert (muntah = (read)))
+    (printout t crlf "Apakah Anda sesak napas? (y/n) ")
+    (assert (sesak = (read)))
+    (printout t crlf "Apakah napas Anda berbunyi (mengi)? (y/n) ")
+    (assert (napas-mengi = (read)))
+    (printout t crlf "Apakah perut Anda terasa kembung? (y/n) ")
+    (assert (kembung = (read)))
+    (printout t crlf "Hasil analisis:" crlf)
+    )
+
+; Rule-rule penyakit berdasarkan gejalanya
+
+(defrule demam 
+    (declare (salience 90))
+    (suhu y) 
+    (pilek n) 
+    (batuk n)
+    (pusing y)
+    (perut y | n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    => 
+    (printout t crlf "Anda terindikasi demam. Silakan minum paracetamol. Jika suhu semakin tinggi, segera periksa ke dokter." crlf)
+    (assert (demamCheck "checked"))
+    )
+    
+(defrule meriang 
+    (declare (salience 90))
+    (suhu y) 
+    (pilek n) 
+    (batuk n)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    => 
+    (printout t crlf "Anda terindikasi meriang. Silakan istirahat dan minum obat penurun panas." crlf)
+    (assert (meriangCheck "checked"))
+    )
+
+(defrule flu 
+    (declare (salience 90))
+    (suhu n) 
+    (pilek y) 
+    (batuk y) 
+    (pusing y | n)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    => 
+    (printout t crlf "Anda terindikasi flu. Silakan minum obat flu." crlf)
+    (assert (fluCheck "checked"))
+    )
+
+(defrule gejala-covid
+    (declare (salience 90))
+    (suhu y) 
+    (pilek y) 
+    (batuk y)
+    (pusing y)
+    (perut n)
+    (muntah y | n)
+    (sesak y)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi Covid. Silakan segera lakukan tes Swab." crlf)
+    (assert (covidCheck "checked"))
+    )
+
+(defrule masuk-angin 
+    (declare (salience 90))
+    (suhu n) 
+    (pilek y | n) 
+    (batuk n)
+    (pusing y)
+    (perut y | n)
+    (muntah y)
+    (sesak n)
+    (napas-mengi n)
+    (kembung y)
+    => 
+    (printout t crlf "Anda terindikasi masuk angin. Silakan kerokan atau minum obat masuk angin." crlf)
+    (assert (masukAnginCheck "checked"))
+    )
+
+(defrule sembelit
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk n)
+    (pusing n)
+    (perut y)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi sembelit. Silakan minum obat sembelit. Jika semakin parah, silakan periksa ke dokter." crlf)
+    (assert (sembelitCheck "checked"))
+    )
+
+(defrule diare
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk n)
+    (pusing n)
+    (perut y)
+    (muntah y)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi menderita diare / keracunan makanan. Segera minum oralit atau obat diare. Jika belum sembuh, segera periksa ke dokter." crlf)
+    (assert (diareCheck "checked"))
+    )
+
+(defrule hanya-batuk
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk y)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda hanya batuk. Silakan minum obat batuk." crlf)
+    (assert (hanyaBatukCheck "checked"))
+    )
+
+(defrule hanya-pilek
+    (declare (salience 90))
+    (suhu n) 
+    (pilek y) 
+    (batuk n)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda hanya pilek. Silakan minum obat pilek." crlf)
+    (assert (hanyaPilekCheck "checked"))
+    )
+
+(defrule panik
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk n)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak y)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda hanya panik. Tenangkan diri Anda. Jika terus berlanjut, silakan periksa ke dokter." crlf)
+    (assert (panikCheck "checked"))
+    )
+
+(defrule asma
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk y | n)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak y)
+    (napas-mengi y)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi asma. Gunakan inhaler asma dan silakan segera periksa ke dokter." crlf)
+    (assert (asmaCheck "checked"))
+    )
+
+(defrule sakitKepala
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk n)
+    (pusing y)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda hanya sakit kepala saja. Silakan minum obat sakit kepala." crlf)
+    (assert (sakitKepalaCheck "checked"))
+    )
+
+(defrule infeksi-sinus
+    (declare (salience 90))
+    (suhu y) 
+    (pilek y) 
+    (batuk y | n)
+    (pusing y | n)
+    (perut n)
+    (muntah n)
+    (sesak n)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi menderita infeksi sinus. Hirup uap air hangat dan silakan segera periksa ke dokter." crlf)
+    (assert (sinusCheck "checked"))
+    )
+
+(defrule pneumonia
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk y)
+    (pusing n)
+    (perut n)
+    (muntah n)
+    (sesak y)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi pneumonia. Kumur dengan air garam dan silakan segera periksa ke dokter." crlf)
+    (assert (pneumoniaCheck "checked"))
+    )
+
+(defrule hipertensi
+    (declare (salience 90))
+    (suhu n) 
+    (pilek n) 
+    (batuk n)
+    (pusing y)
+    (perut n)
+    (muntah n)
+    (sesak y)
+    (napas-mengi n)
+    (kembung n)
+    =>
+    (printout t crlf "Anda terindikasi hipertensi. Segera minum obat hipertensi. Jika semakin parah, segera periksa ke dokter." crlf)
+    (assert (hipertensiCheck "checked"))
+    )
+
+; Rule untuk memberitahu user bahwa kombinasi gejala yang diinputkan user belum bisa dideteksi penyakitnya oleh sistem.
+(defrule tidak-diketahui
+    (declare (salience -100))
+    (not (demamCheck "checked"))
+    (not (meriangCheck "checked"))
+    (not (masukAnginCheck "checked"))
+    (not (fluCheck "checked"))
+    (not (covidCheck "checked"))
+    (not (sembelitCheck "checked"))
+    (not (hanyaBatukCheck "checked"))
+    (not (hanyaPilekCheck "checked"))
+    (not (diareCheck "checked"))
+    (not (panikCheck "checked"))
+    (not (asmaCheck "checked"))
+    (not (sakitKepalaCheck "checked"))
+    (not (sinusCheck "checked"))
+    (not (pneumoniaCheck "checked"))
+    (not (hipertensiCheck "checked"))
+    =>
+    (printout t crlf "Mohon maaf, gejala yang Anda inputkan belum bisa dideteksi oleh sistem. Pastikan bahwa inputan yang Anda masukkan tidak salah." crlf)
+    )
